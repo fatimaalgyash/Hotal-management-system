@@ -1,21 +1,40 @@
 import java.sql.*;
 
+/**
+ * This class handles hotel operations such as adding rooms,
+ * booking rooms, checking out guests, displaying rooms,
+ * and deleting rooms from the database.
+ */
 public class HotelService {
 
+    /**
+     * Adds a new room to the database.
+     *
+     * @param id the room number
+     */
     public void addRoom(int id) {
         try {
             Connection con = DBConnection.getConnection();
-            PreparedStatement ps = con.prepareStatement(
-                    "INSERT INTO rooms VALUES (?, true)"
-            );
-            ps.setInt(1, id);
-            ps.executeUpdate();
+            if (con != null) {
+                PreparedStatement ps = con.prepareStatement(
+                        "INSERT INTO rooms VALUES (?, true)"
+                );
+                ps.setInt(1, id);
+                ps.executeUpdate();
+            }
 
         } catch (Exception e) {
-            System.out.println(e);
+            e.printStackTrace();
         }
     }
 
+    /**
+     * Books a room for a guest.
+     *
+     * @param roomId the room number
+     * @param guestName the guest name
+     * @return booking status message
+     */
     public String bookRoom(int roomId, String guestName) {
 
         try {
@@ -52,6 +71,12 @@ public class HotelService {
         }
     }
 
+    /**
+     * Checks out a guest and makes the room available again.
+     *
+     * @param roomId the room number
+     * @return checkout status message
+     */
     public String checkOut(int roomId) {
         try {
             Connection con = DBConnection.getConnection();
@@ -69,6 +94,11 @@ public class HotelService {
         }
     }
 
+    /**
+     * Displays all rooms and their availability status.
+     *
+     * @return a string containing room information
+     */
     public String showRooms() {
         String result = "";
 
@@ -87,5 +117,34 @@ public class HotelService {
         }
 
         return result;
+    }
+
+    /**
+     * Deletes a room from the database.
+     *
+     * @param roomId the room number
+     * @return deletion status message
+     */
+    public String deleteRoom(int roomId) {
+        try {
+            Connection con = DBConnection.getConnection();
+
+            PreparedStatement ps = con.prepareStatement(
+                    "DELETE FROM rooms WHERE id=?"
+            );
+            ps.setInt(1, roomId);
+
+            int rows = ps.executeUpdate();
+
+            if (rows > 0) {
+                return "Room Deleted!";
+            } else {
+                return "Room not found!";
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error!";
+        }
     }
 }

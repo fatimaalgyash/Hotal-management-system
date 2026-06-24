@@ -1,7 +1,17 @@
 import javax.swing.*;
 
+/**
+ * This class creates the graphical user interface (GUI)
+ * for the Hotel Management System.
+ * It allows users to add rooms, book rooms,
+ * check out guests, display rooms, and delete rooms.
+ */
 public class HotelGUI {
 
+    /**
+     * Creates and initializes the GUI components
+     * and connects them with the hotel services.
+     */
     public HotelGUI() {
 
         HotelService service = new HotelService();
@@ -38,6 +48,10 @@ public class HotelGUI {
         show.setBounds(150, 140, 120, 30);
         frame.add(show);
 
+        JButton delete = new JButton("Delete");
+        delete.setBounds(280, 100, 90, 30);
+        frame.add(delete);
+
         add.addActionListener(e -> {
             service.addRoom(Integer.parseInt(roomField.getText()));
             area.setText("Room Added");
@@ -58,6 +72,11 @@ public class HotelGUI {
 
         show.addActionListener(e -> {
             area.setText(service.showRooms());
+        });
+
+        delete.addActionListener(e -> {
+            int roomId = Integer.parseInt(roomField.getText());
+            area.setText(service.deleteRoom(roomId));
         });
 
         frame.setVisible(true);
