@@ -1,40 +1,92 @@
 import java.sql.*;
 
-/**
- * This class handles hotel operations such as adding rooms,
- * booking rooms, checking out guests, displaying rooms,
- * and deleting rooms from the database.
- */
 public class HotelService {
 
-    /**
-     * Adds a new room to the database.
-     *
-     * @param id the room number
-     */
     public void addRoom(int id) {
         try {
             Connection con = DBConnection.getConnection();
-            if (con != null) {
-                PreparedStatement ps = con.prepareStatement(
-                        "INSERT INTO rooms VALUES (?, true)"
-                );
-                ps.setInt(1, id);
-                ps.executeUpdate();
-            }
+
+            PreparedStatement ps = con.prepareStatement(
+                    "INSERT INTO rooms VALUES (?, NULL, NULL, true)"
+            );
+
+            ps.setInt(1, id);
+            ps.executeUpdate();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    /**
-     * Books a room for a guest.
-     *
-     * @param roomId the room number
-     * @param guestName the guest name
-     * @return booking status message
-     */
+    public String updateRoom(int roomId, String type, double price) {
+
+        try {
+            Connection con = DBConnection.getConnection();
+
+            PreparedStatement ps = con.prepareStatement(
+                    "UPDATE rooms SET type=?, price=? WHERE id=?"
+            );
+
+            ps.setString(1, type);
+            ps.setDouble(2, price);
+            ps.setInt(3, roomId);
+
+            int rows = ps.executeUpdate();
+
+            return rows > 0 ? "Room Updated!" : "Room Not Found!";
+
+        } catch (Exception e) {
+            return e.toString();
+        }
+    }
+
+    public String deleteRoom(int roomId) {
+
+        try {
+            Connection con = DBConnection.getConnection();
+
+            PreparedStatement ps = con.prepareStatement(
+                    "DELETE FROM rooms WHERE id=?"
+            );
+
+            ps.setInt(1, roomId);
+
+            int rows = ps.executeUpdate();
+
+            return rows > 0 ? "Room Deleted!" : "Room Not Found!";
+
+        } catch (Exception e) {
+            return e.toString();
+        }
+    }
+
+    public String showRooms() {
+
+        String result = "";
+
+        try {
+            Connection con = DBConnection.getConnection();
+
+            Statement st = con.createStatement();
+
+            ResultSet rs = st.executeQuery("SELECT * FROM rooms");
+
+            while (rs.next()) {
+
+                result += "Room: " + rs.getInt("id")
+                        + " | Type: " + rs.getString("type")
+                        + " | Price: " + rs.getDouble("price")
+                        + " | Available: " + rs.getBoolean("available")
+                        + "\n";
+            }
+
+        } catch (Exception e) {
+            return e.toString();
+        }
+
+        return result;
+    }
+
     public String bookRoom(int roomId, String guestName) {
 
         try {
@@ -44,6 +96,7 @@ public class HotelService {
                     "INSERT INTO guests(name) VALUES (?)",
                     Statement.RETURN_GENERATED_KEYS
             );
+
             ps1.setString(1, guestName);
             ps1.executeUpdate();
 
@@ -54,6 +107,7 @@ public class HotelService {
             PreparedStatement ps2 = con.prepareStatement(
                     "INSERT INTO bookings(guest_id, room_id) VALUES (?, ?)"
             );
+
             ps2.setInt(1, guestId);
             ps2.setInt(2, roomId);
             ps2.executeUpdate();
@@ -61,6 +115,7 @@ public class HotelService {
             PreparedStatement ps3 = con.prepareStatement(
                     "UPDATE rooms SET available=false WHERE id=?"
             );
+
             ps3.setInt(1, roomId);
             ps3.executeUpdate();
 
@@ -71,19 +126,15 @@ public class HotelService {
         }
     }
 
-    /**
-     * Checks out a guest and makes the room available again.
-     *
-     * @param roomId the room number
-     * @return checkout status message
-     */
     public String checkOut(int roomId) {
+
         try {
             Connection con = DBConnection.getConnection();
 
             PreparedStatement ps = con.prepareStatement(
                     "UPDATE rooms SET available=true WHERE id=?"
             );
+
             ps.setInt(1, roomId);
             ps.executeUpdate();
 
@@ -91,60 +142,6 @@ public class HotelService {
 
         } catch (Exception e) {
             return e.toString();
-        }
-    }
-
-    /**
-     * Displays all rooms and their availability status.
-     *
-     * @return a string containing room information
-     */
-    public String showRooms() {
-        String result = "";
-
-        try {
-            Connection con = DBConnection.getConnection();
-            Statement st = con.createStatement();
-            ResultSet rs = st.executeQuery("SELECT * FROM rooms");
-
-            while (rs.next()) {
-                result += "Room: " + rs.getInt("id") +
-                        " Available: " + rs.getBoolean("available") + "\n";
-            }
-
-        } catch (Exception e) {
-            result = e.toString();
-        }
-
-        return result;
-    }
-
-    /**
-     * Deletes a room from the database.
-     *
-     * @param roomId the room number
-     * @return deletion status message
-     */
-    public String deleteRoom(int roomId) {
-        try {
-            Connection con = DBConnection.getConnection();
-
-            PreparedStatement ps = con.prepareStatement(
-                    "DELETE FROM rooms WHERE id=?"
-            );
-            ps.setInt(1, roomId);
-
-            int rows = ps.executeUpdate();
-
-            if (rows > 0) {
-                return "Room Deleted!";
-            } else {
-                return "Room not found!";
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "Error!";
         }
     }
 }
