@@ -1,115 +1,159 @@
 import javax.swing.*;
 
+/**
+        * This class creates the graphical user interface (GUI)
+        * for the Hotel Management System.
+        */
 public class HotelGUI {
 
+    /**
+            * Creates the GUI based on the user role.
+            *
+            * @param role user role (Admin or Receptionist)
+     */
     public HotelGUI(String role) {
 
         HotelService service = new HotelService();
 
         JFrame frame = new JFrame("Hotel System");
-        frame.setSize(450, 450);
+        frame.setSize(500, 450);
         frame.setLayout(null);
+
+        JLabel roomLabel = new JLabel("Room ID");
+        roomLabel.setBounds(20, 20, 80, 25);
+        frame.add(roomLabel);
 
         JTextField roomField = new JTextField();
         roomField.setBounds(120, 20, 150, 25);
         frame.add(roomField);
 
+        JLabel guestLabel = new JLabel("Guest");
+        guestLabel.setBounds(20, 60, 80, 25);
+        frame.add(guestLabel);
+
         JTextField guestField = new JTextField();
         guestField.setBounds(120, 60, 150, 25);
         frame.add(guestField);
 
+        JLabel typeLabel = new JLabel("Type");
+        typeLabel.setBounds(20, 100, 80, 25);
+        frame.add(typeLabel);
+
         JTextField typeField = new JTextField();
         typeField.setBounds(120, 100, 150, 25);
         frame.add(typeField);
+
+        JLabel priceLabel = new JLabel("Price");
+        priceLabel.setBounds(20, 140, 80, 25);
+        frame.add(priceLabel);
 
         JTextField priceField = new JTextField();
         priceField.setBounds(120, 140, 150, 25);
         frame.add(priceField);
 
         JTextArea area = new JTextArea();
-        area.setBounds(20, 250, 400, 150);
+        area.setBounds(20, 260, 440, 120);
         frame.add(area);
 
-        JButton add = new JButton("Add");
-        add.setBounds(20, 200, 80, 30);
+        JButton add = new JButton("Add Room");
+        add.setBounds(20, 190, 110, 30);
         frame.add(add);
 
         JButton update = new JButton("Update");
-        update.setBounds(110, 200, 90, 30);
+        update.setBounds(140, 190, 100, 30);
         frame.add(update);
 
         JButton delete = new JButton("Delete");
-        delete.setBounds(210, 200, 90, 30);
+        delete.setBounds(250, 190, 100, 30);
         frame.add(delete);
 
         JButton book = new JButton("Book");
-        book.setBounds(310, 200, 80, 30);
+        book.setBounds(360, 190, 90, 30);
         frame.add(book);
 
         JButton checkout = new JButton("CheckOut");
-        checkout.setBounds(20, 170, 120, 30);
+        checkout.setBounds(20, 225, 120, 30);
         frame.add(checkout);
 
         JButton show = new JButton("Show");
-        show.setBounds(150, 170, 120, 30);
+        show.setBounds(160, 225, 120, 30);
         frame.add(show);
 
-        // ===== صلاحيات =====
-
+        // صلاحيات المستخدم
         if (role.equalsIgnoreCase("Admin")) {
+
+            guestLabel.setVisible(false);
+            guestField.setVisible(false);
 
             book.setVisible(false);
             checkout.setVisible(false);
-            guestField.setVisible(false);
 
         } else if (role.equalsIgnoreCase("Receptionist")) {
 
             add.setVisible(false);
             update.setVisible(false);
             delete.setVisible(false);
+
+            typeLabel.setVisible(false);
             typeField.setVisible(false);
+
+            priceLabel.setVisible(false);
             priceField.setVisible(false);
         }
 
-        // ===== Actions =====
-
+        // Add Room
         add.addActionListener(e -> {
-            service.addRoom(Integer.parseInt(roomField.getText()));
-            area.setText("Room Added");
-        });
+                    service.addRoom(
+                            Integer.parseInt(roomField.getText()),
+                            typeField.getText(),
+                            Double.parseDouble(priceField.getText())
+                    );
 
-        update.addActionListener(e -> {
-            area.setText(service.updateRoom(
-                    Integer.parseInt(roomField.getText()),
-                    typeField.getText(),
-                    Double.parseDouble(priceField.getText())
-            ));
-        });
+                    area.setText("Room Added!");
+                });
+            // Update Room
+            update.addActionListener(e -> {
 
-        delete.addActionListener(e -> {
-            area.setText(service.deleteRoom(
+                area.setText(service.updateRoom(
+                        Integer.parseInt(roomField.getText()),
+                        typeField.getText(),
+                        Double.parseDouble(priceField.getText())
+                ));
+            });
+
+            // Delete Room
+            delete.addActionListener(e -> {
+
+                area.setText(service.deleteRoom(
+                        Integer.parseInt(roomField.getText())
+                ));
+            });
+
+            // Book Room
+            book.addActionListener(e -> {
+
+                area.setText(service.bookRoom(
+                        Integer.parseInt(roomField.getText()),
+                        guestField.getText()
+                ));
+            });
+
+            // Check Out
+            checkout.addActionListener(e -> {area.setText(service.checkOut(
                     Integer.parseInt(roomField.getText())
             ));
-        });
+            });
 
-        book.addActionListener(e -> {
-            area.setText(service.bookRoom(
-                    Integer.parseInt(roomField.getText()),
-                    guestField.getText()
-            ));
-        });
+            // Show Rooms
+            show.addActionListener(e -> {
 
-        checkout.addActionListener(e -> {
-            area.setText(service.checkOut(
-                    Integer.parseInt(roomField.getText())
-            ));
-        });
+                area.setText(service.showRooms());
 
-        show.addActionListener(e -> {
-            area.setText(service.showRooms());
-        });
+            });
 
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setVisible(true);
+        }
     }
-}
+
+

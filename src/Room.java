@@ -4,17 +4,23 @@
  */
 public class Room implements Reservable {
 
-    private  final int roomNumber;
-    private boolean isAvailable;
+    private final int roomNumber;
+    private String type;
+    private double price;
+    private boolean available;
 
     /**
      * Creates a new room.
      *
-     * @param roomNumber the room number
+     * @param roomNumber room number
+     * @param type room type
+     * @param price room price
      */
-    public Room(int roomNumber) {
+    public Room(int roomNumber, String type, double price) {
         this.roomNumber = roomNumber;
-        this.isAvailable = true;
+        this.type = type;
+        this.price = price;
+        this.available = true;
     }
 
     /**
@@ -27,26 +33,62 @@ public class Room implements Reservable {
     }
 
     /**
-     * Returns the availability status of the room.
+     * Returns the room type.
      *
-     * @return true if available, false otherwise
+     * @return room type
      */
-    public boolean isAvailable() {
-        return isAvailable;
+    public String getType() {
+        return type;
     }
 
     /**
-     * Reserves the room by changing its availability status.
+     * Sets the room type.
+     *
+     * @param type new room type
+     */
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    /**
+     * Returns the room price.
+     *
+     * @return room price
+     */
+    public double getPrice() {
+        return price;
+    }
+
+    /**
+     * Sets the room price.
+     *
+     * @param price new room price
+     */
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    /**
+     * Checks whether the room is available.
+     *
+     * @return true if available, otherwise false
+     */
+    public boolean isAvailable() {
+        return available;
+    }
+
+    /**
+     * Reserves the room.
      */
     @Override
     public void reserve() {
-        isAvailable = false;
+        available = false;
     }
 
     /**
-     * Makes the room available again.
+     * Frees the room.
      */
     public void freeRoom() {
-        isAvailable = true;
+        available = true;
     }
 }
