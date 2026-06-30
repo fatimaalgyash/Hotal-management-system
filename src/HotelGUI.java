@@ -56,27 +56,27 @@ public class HotelGUI {
         frame.add(area);
 
         JButton add = new JButton("Add Room");
-        add.setBounds(20, 190, 110, 30);
+        add.setBounds(20, 190, 120, 30);
         frame.add(add);
 
         JButton update = new JButton("Update");
-        update.setBounds(140, 190, 100, 30);
+        update.setBounds(300, 190, 120, 30);
         frame.add(update);
 
         JButton delete = new JButton("Delete");
-        delete.setBounds(250, 190, 100, 30);
+        delete.setBounds(20, 225, 120, 30);
         frame.add(delete);
 
         JButton book = new JButton("Book");
-        book.setBounds(360, 190, 90, 30);
+        book.setBounds(20, 225, 120, 30);
         frame.add(book);
 
         JButton checkout = new JButton("CheckOut");
-        checkout.setBounds(20, 225, 120, 30);
+        checkout.setBounds(160, 225, 120, 30);
         frame.add(checkout);
 
         JButton show = new JButton("Show");
-        show.setBounds(160, 225, 120, 30);
+        show.setBounds(300, 225, 120, 30);
         frame.add(show);
 
         // صلاحيات المستخدم

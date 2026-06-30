@@ -1,27 +1,24 @@
 /**
- * Simple Guest class.
+ * This class represents a guest in the hotel.
+ * It inherits from the Person class.
  */
-public class Guest {
-
-    private String name;
+public class Guest extends Person {
 
     /**
-     * Constructor with name.
+     * Creates a guest object.
+     *
+     * @param name the guest name
+     * @param id the guest ID
      */
-    public Guest(String name) {
-        this.name = name;
-    }
-    /**
-     * Gets the name.
-     */
-    public String getName() {
-        return name;
+    public Guest(String name, String id) {
+        super(name, id);
     }
 
     /**
-     * Sets the name.
+     * Displays the role of the person.
      */
-    public void setName(String name) {
-        this.name = name;
+    @Override
+    public void displayRole() {
+        System.out.println("Guest");
     }
 }
